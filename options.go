@@ -62,6 +62,12 @@ func WithLevelString(str string) Option {
 	}
 }
 
+func WithCallback(fn func(entry *Entry)) Option {
+	return func(o *options) {
+		o.callback = fn
+	}
+}
+
 type options struct {
 	traceId   string
 	formatter Formatter
