@@ -72,3 +72,8 @@ func SetLevel(level Level) error {
 func SetLevelString(str string) error {
 	return _std.SetLevelString(str)
 }
+
+// SetStdOptions set _std options
+func SetStdOptions(opts ...Option)  {
+	_std.setOptions(newOptions(opts))
+}

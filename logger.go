@@ -190,7 +190,7 @@ func (l *logger) output(calldepth int, level Level, msg string, fields []interfa
 	defer pool.Put(buffer)
 	buffer.Reset()
 
-	data, err := opts.formatter.Format(&Entry{
+	entry := &Entry{
 		Location: location,
 		Time:     time.Now(),
 		Level:    level,
@@ -198,7 +198,9 @@ func (l *logger) output(calldepth int, level Level, msg string, fields []interfa
 		Message:  msg,
 		Fields:   combinedFields,
 		Buffer:   buffer,
-	})
+	}
+
+	data, err := opts.formatter.Format(entry)
 	if err != nil {
 		fmt.Fprintf(ConcurrentStderr, "log: failed to format Entry, error=%v, location=%s\n", err, location)
 		return
@@ -206,6 +208,10 @@ func (l *logger) output(calldepth int, level Level, msg string, fields []interfa
 	if _, err = opts.output.Write(data); err != nil {
 		fmt.Fprintf(ConcurrentStderr, "log: failed to write to log, error=%v, location=%s\n", err, location)
 		return
+	}
+
+	if opts.callback != nil {
+		opts.callback(entry)
 	}
 }
 

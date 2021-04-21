@@ -67,6 +67,7 @@ type options struct {
 	formatter Formatter
 	output    io.Writer
 	level     Level
+	callback  func(entry *Entry)
 }
 
 func (opts *options) SetFormatter(formatter Formatter) {
